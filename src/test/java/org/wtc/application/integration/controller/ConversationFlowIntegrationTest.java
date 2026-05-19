@@ -267,14 +267,14 @@ public class ConversationFlowIntegrationTest extends BaseIntegrationTest {
         Map<String, List<String>> associationPayload = Map.of("segmentIds", List.of(segmentId));
 
 
-        mockMvc.perform(patch("/clients/1/segments")
+        mockMvc.perform(patch("/clients/" + clientId + "/segments")
                         .header("Authorization", operatorToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(associationPayload)))
                 .andExpect(status().isNoContent());
 
 
-        mockMvc.perform(patch("/user/1/segments")
+        mockMvc.perform(patch("/user/" + operatorId + "/segments")
                         .header("Authorization", operatorToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(associationPayload)))
@@ -284,7 +284,7 @@ public class ConversationFlowIntegrationTest extends BaseIntegrationTest {
         Map<String, Object> operatorConversationPayload = Map.of(
                 "title", "Contato ativo sobre saldo",
                 "firstMessage", "Olá, vimos uma instabilidade no seu saldo. Está tudo bem?",
-                "clientId", 1
+                "clientId", clientId
         );
 
         mockMvc.perform(post("/conversations/user")
@@ -310,13 +310,13 @@ public class ConversationFlowIntegrationTest extends BaseIntegrationTest {
 
         System.out.println("JSON DA CONVERSA COMPLETO: " + conversaCriada);
 
-        String realRecipientId = "1";
+        String realRecipientId = clientId;
 
 
 
         Map<String, Object> clientResponsePayload = Map.of(
                 "content", "testemensagem",
-                "recipientId", Long.parseLong(realRecipientId), // 🎯 Vai usar o ID correto
+                "recipientId", Long.parseLong(clientId),
                 "conversationId", Long.parseLong(conversationId),
                 "recipientType", "OPERATOR"
         );

@@ -1,5 +1,7 @@
 package org.wtc.application.api.conversations;
 
+import jakarta.transaction.TransactionScoped;
+import jakarta.transaction.Transactional;
 import org.wtc.application.conversation.dto.ClientConversationRequestDTO;
 import org.wtc.application.integration.controller.BaseApiTest;
 
@@ -11,6 +13,8 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+
+
 
 class ClientConversationControllerIT extends BaseApiTest {
 
