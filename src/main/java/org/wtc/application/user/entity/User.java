@@ -60,7 +60,7 @@ public class User {
 
     @ManyToMany
     @JoinTable(
-            name = "user_segments",
+            name = "wtc_user_segments",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "segment_id")
     )

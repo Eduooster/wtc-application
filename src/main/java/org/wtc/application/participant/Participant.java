@@ -11,14 +11,15 @@ import org.wtc.application.user.entity.User;
 
 import java.util.Objects;
 
-@Entity
+@Entity(name = "wtc_participants")
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+
 public class Participant {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -30,7 +31,7 @@ public class Participant {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Participant that = (Participant) o;
-        // CORRIGIDO: Comparando refId com refId (ou id com id)
+
         return Objects.equals(this.refId, that.refId) &&
                 this.participantType == that.participantType;
     }

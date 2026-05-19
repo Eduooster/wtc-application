@@ -1,10 +1,13 @@
 package org.wtc.application.campaing.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.wtc.application.audit.entity.Audit;
+import org.wtc.application.audit.repository.AuditRepository;
 import org.wtc.application.campaing.dto.CampaignRequestDTO;
 import org.wtc.application.campaing.dto.CampaignResponseDTO;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,8 @@ public class CampaignServiceImpl implements ICampaignService {
     private final SegmentRepository segmentRepository;
     @Qualifier("campaignMapper")
     private final CampaignMapper mapper;
+    private final AuditRepository auditRepository;
+    private final CampaignRepository campaignRepository;
 
     @Override
     @Transactional
@@ -74,12 +79,29 @@ public class CampaignServiceImpl implements ICampaignService {
 
     @Override
     @Transactional
-    public void deleteCampaign(Long id) {
+    public void deleteCampaign(Long id,Long userId) {
         Campaign campaign = repository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new CampaignNotFoundException("Campanha não encontrada"));
 
+        User user = userRepository.findById(userId).orElseThrow(
+                ()-> new EntityNotFoundException("User not found")
+        );
+
 
         campaign.setDeleted(true);
-        repository.save(campaign);
+
+        Campaign savedCampaign=  campaignRepository.save(campaign);
+        auditRepository.save(
+                new Audit(
+                        "CAMPAIGN_SENT",
+                        "Campaign sent successfully",
+                        user,
+                        savedCampaign.getId(),
+                        "Campaign",
+                        false
+                )
+        );
+
+        repository.save(savedCampaign);
     }
 }

@@ -8,9 +8,9 @@ import org.wtc.application.segment.dto.SegmentResponseDTO;
 import java.util.List;
 
 public interface ISegmentService {
-    SegmentResponseDTO createSegment(SegmentRequestDTO request);
+    SegmentResponseDTO createSegment(SegmentRequestDTO request,Long userId);
     SegmentResponseDTO findById(Long id);
     Page<SegmentResponseDTO> findAll(Pageable pageable);
     SegmentResponseDTO updateSegment(Long id, SegmentRequestDTO request);
-    void deleteSegment(Long id);
+    void deleteSegment(Long id,Long userId);
 }

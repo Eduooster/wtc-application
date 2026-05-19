@@ -14,5 +14,5 @@ public interface ICampaignService {
     CampaignResponseDTO findById(Long id);
     Page<CampaignResponseDTO> findAll(Pageable pageable);
     CampaignResponseDTO updateCampaign(Long id, CampaignRequestDTO request);
-    void deleteCampaign(Long id);
+    void deleteCampaign(Long id,Long userId);
 }

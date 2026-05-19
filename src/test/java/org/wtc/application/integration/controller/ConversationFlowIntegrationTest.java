@@ -3,10 +3,15 @@ package org.wtc.application.integration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.wtc.application.client.repository.ClientRepository;
@@ -24,7 +29,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ConversationFlowIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
@@ -66,7 +72,6 @@ public class ConversationFlowIntegrationTest extends BaseIntegrationTest {
         clientRepository.deleteAll();
         userRepository.deleteAll();
         segmentRepository.deleteAll();
-
 
         Map<String, String> userPayload = Map.of(
                 "email", USER_EMAIL,
@@ -274,7 +279,7 @@ public class ConversationFlowIntegrationTest extends BaseIntegrationTest {
                 .andExpect(status().isNoContent());
 
 
-        mockMvc.perform(patch("/user/" + operatorId + "/segments")
+        mockMvc.perform(patch("/users/" + operatorId + "/segments")
                         .header("Authorization", operatorToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(associationPayload)))

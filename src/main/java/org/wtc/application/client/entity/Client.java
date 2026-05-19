@@ -46,11 +46,11 @@ public class Client {
 
     @ManyToMany
     @JoinTable(
-            name = "client_tags",
+            name = "wtc_client_tags",
             joinColumns = @JoinColumn(name = "client_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private List<Tag> tags = new ArrayList<>();
+    private Set<Tag> tags = new HashSet<>();
 
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -71,13 +71,16 @@ public class Client {
     @ManyToMany
 
     @JoinTable(
-            name = "client_segments",
+            name = "wtc_client_segments",
             joinColumns = @JoinColumn(name = "client_id"),
             inverseJoinColumns = @JoinColumn(name = "segment_id")
     )
     private Set<Segment> segments = new HashSet<>();
     @Column(columnDefinition = "TEXT")
     private String firebaseToken;
+
+
+
 
 
     @PostPersist

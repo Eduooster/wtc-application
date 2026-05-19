@@ -2,6 +2,7 @@ package org.wtc.application.api.conversations;
 
 import jakarta.transaction.TransactionScoped;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Disabled;
 import org.wtc.application.conversation.dto.ClientConversationRequestDTO;
 import org.wtc.application.integration.controller.BaseApiTest;
 

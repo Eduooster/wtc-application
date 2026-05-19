@@ -38,7 +38,7 @@ public class Conversation {
 
     @ManyToMany
     @JoinTable(
-            name = "conversation_participants",
+            name = "wtc_conversation_participants",
             joinColumns = @JoinColumn(name = "conversation_id"),
             inverseJoinColumns = @JoinColumn(name = "participant_id")
     )

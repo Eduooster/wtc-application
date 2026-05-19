@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.el.util.MessageFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.wtc.application.audit.repository.AuditRepository;
 import org.wtc.application.auth.entity.AuthenticableUser;
 import org.wtc.application.campaing.dto.CampaignNotificationEvent;
 import org.wtc.application.campaing.entity.Campaign;
@@ -47,6 +48,7 @@ public class SendCampaign {
     private final ConversationResolverService conversationResolverService;
     private final ParticipantRepository participantRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final AuditRepository auditRepository;
 
 
     @Transactional
@@ -122,6 +124,8 @@ public class SendCampaign {
         campaign.setStatus(CampaignStatus.SENT);
         campaign.setSentAt(LocalDateTime.now());
         campaign.setSendNotification(true);
+
+
         campaignRepository.save(campaign);
     }
 
