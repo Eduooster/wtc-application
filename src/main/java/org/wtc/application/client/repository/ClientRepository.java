@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.wtc.application.auth.entity.AuthenticableUser;
 import org.wtc.application.client.entity.Client;
+import org.wtc.application.segment.entity.Segment;
 
 import java.nio.channels.FileChannel;
 
@@ -16,4 +17,8 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     List<Client> findAllByDeletedFalse();
 
     Optional<Client> findByCredentials(AuthenticableUser authenticableUser);
+
+    List<Client> findAllBySegments(Segment segment);
+
+
 }

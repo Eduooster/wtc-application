@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Firebase FCM Test</title>
+</head>
+<body>
+
+<h1>Firebase Token Test</h1>
+
+<button onclick="registerAndLogin()">Register + Login</button>
+<button onclick="requestPermission()">Gerar Token</button>
+
+<p id="token" style="word-break: break-all; font-weight: bold; color: green;"></p>
+
+<script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDlkuG1MipcTDT4JEFRyRQ9viIStHQ1Olg",
+        authDomain: "wtc-backend.firebaseapp.com",
+        projectId: "wtc-backend",
+        storageBucket: "wtc-backend.firebasestorage.app",
+        messagingSenderId: "549679471300",
+        appId: "1:549679471300:web:ee1a81112b4af12dad0791",
+        measurementId: "G-VRFJTGMV9E"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging(app);
+
+    async function registerAndLogin() {
+        try {
+            console.log("Tentando registrar cliente...");
+            await fetch("http://localhost:8080/auth/register/client", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: "cliente@empresa.com",
+                    fullName: "João da Silva",
+                    password: "SenhaSegura123!",
+                    companyName: "Empresa de Sucesso LTDA",
+                    taxId: "12.345.678/0001-90",
+                    phoneNumber: "+55 11 99999-9999"
+                })
+            });
+            console.log("CLIENT REGISTERED");
+
+            console.log("Tentando realizar login...");
+            const loginResponse = await fetch("http://localhost:8080/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: "cliente@empresa.com",
+                    password: "SenhaSegura123!"
+                })
+            });
+
+            const loginData = await loginResponse.json();
+            localStorage.setItem("jwt", loginData.accessToken);
+            console.log("JWT SAVED IN LOCALSTORAGE");
+            alert("Registrado e Logado com Sucesso! JWT Armazenado.");
+
+        } catch (error) {
+            console.error("Erro no fluxo de autenticação:", error);
+        }
+    }
+
+    async function requestPermission() {
+        console.log("Solicitando permissão de notificação...");
+        const permission = await Notification.requestPermission();
+
+        if (permission !== "granted") {
+            alert("Permissão de notificação negada!");
+            return;
+        }
+
+        try {
+            const firebaseToken = await getToken(messaging, {
+                vapidKey: "BD_iK5dYX0DKbBl21Z8Nv20H7n2h2yQKb0Vi_twT3FceVlZdDFsmMEE8bto-gOCTz5ObuoekhyXyO5s85m6riYI"
+            });
+
+            if (!firebaseToken) {
+                console.warn("Nenhum token foi retornado. Verifique o console ou o Service Worker.");
+                return;
+            }
+
+            console.log("FCM TOKEN GERADO:", firebaseToken);
+            document.getElementById("token").innerText = "Token: " + firebaseToken;
+
+            const jwt = localStorage.getItem("jwt");
+            if (!jwt) {
+                alert("Aviso: Você gerou o token, mas não está logado (JWT não encontrado). Clique em 'Register + Login' primeiro.");
+                return;
+            }
+
+            const clienteId = 1; // ID de teste para bater com o /{id}/device-token do seu Spring Boot
+
+            console.log("Enviando token para o Spring Boot via PUT...");
+            const response = await fetch(`http://localhost:8080/clients/${clienteId}/device-token`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + jwt
+                },
+                body: JSON.stringify({
+                    token: firebaseToken // Erro de sintaxe da barra corrigido aqui!
+                })
+            });
+
+            if (response.ok) {
+                console.log("Sucesso: Firebase token salvo no backend!");
+                alert("Token salvo com sucesso no banco de dados!");
+            } else {
+                console.error("Erro na resposta do servidor Status:", response.status);
+                alert("Erro ao salvar no backend. Código: " + response.status);
+            }
+
+        } catch (error) {
+            console.error("Erro ao processar o token FCM:", error);
+        }
+    }
+
+    // Vincula as funções ao escopo global da página
+    window.registerAndLogin = registerAndLogin;
+    window.requestPermission = requestPermission;
+
+</script>
+
+</body>
+</html>

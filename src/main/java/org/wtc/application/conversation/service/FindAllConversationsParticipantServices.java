@@ -14,34 +14,35 @@ import org.wtc.application.conversation.dto.ConversationResponseDto;
 import org.wtc.application.conversation.entity.Conversation;
 import org.wtc.application.conversation.mapper.ConversationMapper;
 import org.wtc.application.conversation.repository.ConversationRepository;
+import org.wtc.application.participant.Participant;
+import org.wtc.application.participant.ParticipantRepository;
 
 @Service
 @RequiredArgsConstructor
-public class FindAllConversationsServices {
+public class FindAllConversationsParticipantServices {
 
     private final ConversationRepository conversationRepository;
 
 
     private final ConversationMapper conversationMapper;
-    private final ClientRepository clientRepository;
+    private final ParticipantRepository participantRepository;
+
 
 
     @Transactional(readOnly = true)
-    public Page<ConversationResponseDto> findByClient(Pageable pageable, AuthenticableUser authenticableUser) {
-        Client client = clientRepository
-                .findByCredentials(authenticableUser)
-                .orElseThrow(() -> new RuntimeException("Client not found"));
+    public Page<ConversationResponseDto> findByParticipant(Pageable pageable, AuthenticableUser authenticableUser) {
+
+        Participant participant = participantRepository.findById(
+                authenticableUser.getId()).orElseThrow(() -> new RuntimeException("Participant not found"));
 
 
         Page<Conversation> conversations =
                 conversationRepository.findByParticipants_IdAndDeletedFalse(
-                        client.getId(),
+                        participant.getId(),
                         pageable
                 );
 
         return conversations.map(conversationMapper::toResponseDto);
-
-
 
     }
 }

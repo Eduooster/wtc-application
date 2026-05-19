@@ -2,6 +2,9 @@ package org.wtc.application.segment.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.wtc.application.segment.dto.SegmentRequestDTO;
 import org.wtc.application.segment.dto.SegmentResponseDTO;
@@ -18,6 +21,8 @@ import java.util.stream.Collectors;
 public class SegmentServiceImpl implements ISegmentService {
 
     private final SegmentRepository repository;
+
+    @Qualifier("segmentMapper")
     private final SegmentMapper mapper;
 
     @Override
@@ -44,12 +49,12 @@ public class SegmentServiceImpl implements ISegmentService {
     }
 
     @Override
-    public List<SegmentResponseDTO> findAll() {
+    public Page<SegmentResponseDTO> findAll(Pageable pageable) {
 
-        return repository.findAllByDeletedFalseAndActiveTrue().stream()
-                .map(mapper::toDto)
-                .collect(Collectors.toList());
+        return repository.findAllByDeletedFalseAndActiveTrue(pageable)
+                .map(mapper::toDto);
     }
+
 
     @Override
     @Transactional

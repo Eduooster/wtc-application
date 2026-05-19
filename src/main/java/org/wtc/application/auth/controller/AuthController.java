@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.wtc.application.auth.dto.ClientRegistrationDto;
-import org.wtc.application.auth.dto.LoginRequestDto;
-import org.wtc.application.auth.dto.TokenResponseDto;
-import org.wtc.application.auth.dto.UserRegistrationDto;
+import org.wtc.application.auth.dto.*;
 import org.wtc.application.auth.service.ClientRegistrationService;
 import org.wtc.application.auth.service.LoginService;
 
@@ -38,15 +35,15 @@ public class AuthController {
 
 
     @PostMapping("/register/user")
-    public ResponseEntity<Void> registerUser(@RequestBody @Valid UserRegistrationDto dto) {
-        userRegistrationService.register(dto);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<RegisterUserResponseDto> registerUser(@RequestBody @Valid UserRegistrationDto dto) {
+        RegisterUserResponseDto registerUserResponseDto  = userRegistrationService.register(dto);
+        return ResponseEntity.ok(registerUserResponseDto);
     }
 
     @PostMapping("/register/client")
-    public ResponseEntity<Void> registerClient(@RequestBody @Valid ClientRegistrationDto dto) {
-        clientRegistrationService.register(dto);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<RegisterClientResponseDto> registerClient(@RequestBody @Valid ClientRegistrationDto dto) {
+        RegisterClientResponseDto registerClientResponseDto = clientRegistrationService.register(dto);
+        return ResponseEntity.ok(registerClientResponseDto);
     }
 
     //    @PostMapping("/refresh")

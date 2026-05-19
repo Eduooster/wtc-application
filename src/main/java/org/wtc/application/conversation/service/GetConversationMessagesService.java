@@ -2,6 +2,7 @@ package org.wtc.application.conversation.service;
 
 
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,11 +39,11 @@ public class GetConversationMessagesService {
     ) {
 
         Conversation conversation = conversationRepository.findById(conversationId)
-                .orElseThrow(() -> new RuntimeException("Conversation not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Conversation not found"));
 
         Participant participant = participantRepository
                 .findById(principal.getParticipant().getId())
-                .orElseThrow(() -> new RuntimeException("Participant not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Participant not found"));
 
         boolean belongsToConversation = conversation.getParticipants()
                 .contains(participant);

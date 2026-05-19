@@ -13,7 +13,9 @@ import org.wtc.application.tag.entity.Tag;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "wtc_clients")
@@ -40,13 +42,7 @@ public class Client {
     @Column(nullable = false)
     private Boolean active = true;
 
-    @ManyToMany
-    @JoinTable(
-            name = "client_segments",
-            joinColumns = @JoinColumn(name = "client_id"),
-            inverseJoinColumns = @JoinColumn(name = "segment_id")
-    )
-    private List<Segment> segments = new ArrayList<>();
+
 
     @ManyToMany
     @JoinTable(
@@ -72,6 +68,17 @@ public class Client {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "authenticable_user_id", referencedColumnName = "id")
     private AuthenticableUser credentials;
+    @ManyToMany
+
+    @JoinTable(
+            name = "client_segments",
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "segment_id")
+    )
+    private Set<Segment> segments = new HashSet<>();
+    @Column(columnDefinition = "TEXT")
+    private String firebaseToken;
+
 
     @PostPersist
     public void afterSave() {

@@ -33,6 +33,7 @@ public class FindClientConversationsService {
 
         Participant participant = participantService.resolve(principal);
 
+
         return conversationRepository
                 .findByParticipantsContains(participant, pageable)
                 .map(conversationMapper::toResponseDto);

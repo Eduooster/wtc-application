@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.wtc.application.campaing.dto.CampaignRequestDTO;
 import org.wtc.application.campaing.enums.CampaignStatus;
 import org.wtc.application.message.entitity.Message;
 import org.wtc.application.segment.entity.Segment;
@@ -63,5 +64,41 @@ public class Campaign {
     private LocalDateTime updatedAt;
 
     @Column(nullable = false)
-    private Boolean deleted;
+    private Boolean deleted = false;
+
+    @Column(name = "internal_route", nullable = false)
+    private String internalRoute;
+
+    @Column(name = "campaign_code", nullable = false, unique = true)
+    private String campaignCode;
+
+
+    public static Campaign createFromRequest(CampaignRequestDTO request, User creator, Segment segment) {
+        Campaign campaign = new Campaign();
+        campaign.setTitle(request.getTitle());
+        campaign.setContent(request.getContent());
+        campaign.setTargetSegment(segment);
+        campaign.setCreator(creator);
+        campaign.setStatus(CampaignStatus.PENDING);
+        campaign.setScheduledAt(request.getScheduledAt());
+        campaign.setDeleted(false);
+        campaign.setCampaignCode(generateCodeCampaign(request.getTitle()));
+        campaign.setInternalRoute(cleanInternalRoute(request.getInternalRoute()));
+
+        return campaign;
+    }
+
+    private static String generateCodeCampaign(String title) {
+        if (title == null) return "";
+        return title.toLowerCase()
+                .replaceAll("[^a-z0-9 ]", "")
+                .replaceAll("\\s+", "-");
+    }
+
+    private static String cleanInternalRoute(String route) {
+        if (route != null && route.startsWith("/")) {
+            return route.substring(1);
+        }
+        return route;
+    }
 }

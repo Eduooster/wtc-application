@@ -1,6 +1,8 @@
 package org.wtc.application.conversation.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.wtc.application.conversation.entity.Conversation;
 import org.wtc.application.conversation.repository.ConversationRepository;
@@ -8,24 +10,17 @@ import org.wtc.application.participant.Participant;
 
 @Service
 @RequiredArgsConstructor
-public class ValidateAcessConversationService {
+public class ValidateAccessConversationService {
 
     private final ConversationRepository conversationRepository;
 
+    public void validateAccess(Long conversationId, Participant participant) {
 
-
-    private Conversation validateAccess(Long conversationId, Participant participant) {
-
-        Conversation conversation = conversationRepository.findById(conversationId)
-                .orElseThrow();
-
-        boolean allowed = conversation.getParticipants()
-                .contains(participant);
+        boolean allowed = conversationRepository
+                .existsByIdAndParticipants_Id(conversationId, participant.getId());
 
         if (!allowed) {
-            throw new RuntimeException("Access denied");
+            throw new AccessDeniedException("Access denied to this conversation");
         }
-
-        return conversation;
     }
 }

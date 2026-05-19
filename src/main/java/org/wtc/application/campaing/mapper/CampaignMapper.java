@@ -12,10 +12,14 @@ import org.wtc.application.campaing.entity.Campaign;
 public interface CampaignMapper {
 
     Campaign toEntiy(CampaignRequestDTO campaign);
+
+    @Mapping(target = "creator", source = "creator.id")
+    @Mapping(target = "targetSegment", source = "targetSegment.name")
     CampaignResponseDTO toDTO(Campaign campaign);
 
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "creator", ignore = true)
     void updateEntityFromDto(CampaignRequestDTO dto, @MappingTarget Campaign entity);
 }

@@ -2,6 +2,8 @@ package org.wtc.application.user.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.wtc.application.segment.entity.Segment;
+import org.wtc.application.user.dto.UpdateUserSegmentsRequestDTO;
 import org.wtc.application.user.dto.UserRequestDTO;
 import org.wtc.application.user.dto.UserResponseDTO;
 import org.springframework.stereotype.Service;
@@ -9,7 +11,9 @@ import org.wtc.application.user.entity.User;
 import org.wtc.application.user.mapper.UserMapper;
 import org.wtc.application.user.repository.UserRepository;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,4 +75,6 @@ public class UserServiceImpl implements IUserService {
         user.setActive(false);
         userRepository.save(user);
     }
+
+
 }

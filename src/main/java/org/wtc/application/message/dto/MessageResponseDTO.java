@@ -31,11 +31,22 @@ public record MessageResponseDTO(
                 message.getContent(),
                 message.getStatus(),
 
-                message.getSender().getParticipantType(),
-                message.getSender().getRefId(),
+                message.getSender() != null
+                        ? message.getSender().getParticipantType()
+                        : null,
 
-                message.getReceiver().getParticipantType(),
-                message.getReceiver().getRefId(),
+                message.getSender() != null
+                        ? message.getSender().getId()
+                        : null,
+
+                message.getReceiver() != null
+                        ? message.getReceiver().getParticipantType()
+                        : null,
+
+                message.getReceiver() != null
+                        ? message.getReceiver().getId()
+                        : null,
+
 
                 message.getRead(),
                 message.getSentAt(),

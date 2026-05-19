@@ -7,7 +7,6 @@ import org.wtc.application.client.entity.Client;
 import org.wtc.application.message.enums.ParticipantType;
 import org.wtc.application.user.entity.User;
 
-import java.lang.ScopedValue;
 import java.util.Optional;
 
 public interface ParticipantRepository extends JpaRepository<Participant, Long> {
@@ -16,4 +15,7 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
 
 
    Optional<Participant> findByParticipantTypeAndRefId(ParticipantType participantType, Long refId);
+
+
+    Optional<Participant> findByParticipantType(ParticipantType participantType);
 }

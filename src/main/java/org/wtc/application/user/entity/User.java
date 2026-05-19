@@ -8,10 +8,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.wtc.application.auth.entity.AuthenticableUser;
 import org.wtc.application.campaing.entity.Campaign;
 import org.wtc.application.participant.Participant;
+import org.wtc.application.segment.entity.Segment;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "wtc_users")
@@ -54,6 +57,14 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "authenticable_user_id", referencedColumnName = "id")
     private AuthenticableUser credentials;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_segments",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "segment_id")
+    )
+    private Set<Segment> segments = new HashSet<>();
 
     @PostPersist
     public void afterSave() {

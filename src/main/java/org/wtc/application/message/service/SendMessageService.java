@@ -4,15 +4,21 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import org.wtc.application.auth.entity.AuthenticableUser;
 import org.wtc.application.conversation.entity.Conversation;
 import org.wtc.application.conversation.repository.ConversationRepository;
+import org.wtc.application.conversation.service.ValidateAccessConversationService;
 import org.wtc.application.message.dto.MessageResponseDTO;
 import org.wtc.application.message.dto.SendMessageRequestDTO;
 import org.wtc.application.message.entitity.Message;
+import org.wtc.application.message.enums.MessageType;
 import org.wtc.application.message.repository.MessageRepository;
+import org.wtc.application.notification.NotificationRepository;
+import org.wtc.application.notification.entity.Notification;
 import org.wtc.application.participant.Participant;
 import org.wtc.application.participant.ParticipantRepository;
 
@@ -22,9 +28,12 @@ public class SendMessageService {
 
     private final MessageRepository messageRepository;
     private final ConversationRepository conversationRepository;
+    private final ValidateAccessConversationService validateAccessConversationService;
 
 
     private final ParticipantRepository participantRepository;
+    private final ApplicationEventPublisher eventPublisher;
+    private final NotificationRepository notificationRepository;
 
     @Transactional
     public MessageResponseDTO sendMessage(
@@ -32,13 +41,27 @@ public class SendMessageService {
             AuthenticableUser authenticableUser
     ) {
 
+
         Conversation conversation = conversationRepository.findById(request.conversationId())
                 .orElseThrow(() -> new RuntimeException("Conversation not found"));
 
 
-        Participant sender = participantRepository.findByParticipantTypeAndRefId(authenticableUser.getParticipant().getParticipantType(),authenticableUser.getParticipant().getRefId())
+
+        Participant sender = participantRepository.findByParticipantTypeAndRefId(
+                        authenticableUser.getParticipant().getParticipantType(),
+                        authenticableUser.getParticipant().getRefId()
+                )
                 .orElseThrow(() -> new EntityNotFoundException("Sender error"));
 
+
+
+
+        boolean isAllowed = conversation.getParticipants().contains(sender) ||
+                conversation.getParticipants().contains(sender);
+
+        if (!isAllowed) {
+            throw new AccessDeniedException("Você não pertence a esta conversa e não pode enviar mensagens nela.");
+        }
 
 
         Participant receiver = participantRepository
@@ -53,12 +76,20 @@ public class SendMessageService {
                 conversation,
                 request.content(),
                 sender,
-                receiver
+                receiver,
+                MessageType.CHAT
         );
 
         conversation.updateLastMessage();
-
         Message savedMessage = messageRepository.save(message);
+
+        Notification notification = new Notification();
+        notification.setConversation(conversation);
+        notification.setReceiver(receiver);
+        notification.setPreviewContent(request.content());
+        notification.setRead(false);
+
+        notificationRepository.save(notification);
 
         return new MessageResponseDTO(savedMessage);
     }

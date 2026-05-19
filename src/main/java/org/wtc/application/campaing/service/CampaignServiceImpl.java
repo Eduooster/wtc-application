@@ -3,6 +3,8 @@ package org.wtc.application.campaing.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.wtc.application.campaing.dto.CampaignRequestDTO;
 import org.wtc.application.campaing.dto.CampaignResponseDTO;
 import org.springframework.stereotype.Service;
@@ -51,11 +53,11 @@ public class CampaignServiceImpl implements ICampaignService {
     }
 
     @Override
-    public List<CampaignResponseDTO> findAll() {
+    public Page<CampaignResponseDTO> findAll(Pageable pageable) {
 
-        return repository.findAllByDeletedFalse().stream()
-                .map(mapper::toDTO)
-                .collect(Collectors.toList());
+        return repository.findAllByDeletedFalse(pageable)
+                .map(mapper::toDTO);
+
     }
 
     @Override

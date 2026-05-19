@@ -20,18 +20,12 @@ public class CampaignMetric {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Integer totalSent = 0;
-
-    @Column(nullable = false)
-    private Integer totalOpened = 0;
-
-    @Column(nullable = false)
-    private Integer totalFailed = 0;
-
     @OneToOne
-    @JoinColumn(name = "campaign_id", nullable = false)
+    @JoinColumn(name = "campaign_id", nullable = false, unique = true)
     private Campaign campaign;
+
+    @Column(name = "clicks_count", nullable = false)
+    private Long clicksCount = 0L;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;

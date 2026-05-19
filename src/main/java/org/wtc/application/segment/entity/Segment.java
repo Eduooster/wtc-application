@@ -5,10 +5,13 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.wtc.application.campaing.entity.Campaign;
 import org.wtc.application.client.entity.Client;
+import org.wtc.application.user.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "wtc_segments")
@@ -33,7 +36,9 @@ public class Segment {
     private Boolean active = true;
 
     @ManyToMany(mappedBy = "segments")
-    private List<Client> clients = new ArrayList<>();
+    private Set<Client> clients = new HashSet<>();
+    @ManyToMany(mappedBy = "segments")
+    private Set<User> operators = new HashSet<>();
 
     @OneToMany(mappedBy = "targetSegment")
     private List<Campaign> campaigns = new ArrayList<>();
@@ -41,5 +46,6 @@ public class Segment {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    private Boolean deleted;
+    @Column(nullable = false)
+    private Boolean deleted = false;
 }

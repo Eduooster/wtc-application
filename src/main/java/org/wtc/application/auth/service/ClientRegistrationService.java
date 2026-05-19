@@ -6,6 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.wtc.application.auth.dto.ClientRegistrationDto;
+import org.wtc.application.auth.dto.RegisterClientResponseDto;
+import org.wtc.application.auth.dto.RegisterUserResponseDto;
 import org.wtc.application.auth.entity.AuthenticableUser;
 import org.wtc.application.auth.entity.RoleProfile;
 import org.wtc.application.client.entity.Client;
@@ -23,7 +25,7 @@ public class ClientRegistrationService {
 
 
     @Transactional
-    public void register(ClientRegistrationDto dto) {
+    public RegisterClientResponseDto register(ClientRegistrationDto dto) {
         var credentials = new AuthenticableUser();
         credentials.setEmail(dto.email());
         credentials.setPassword(passwordEncoder.encode(dto.password()));
@@ -33,6 +35,7 @@ public class ClientRegistrationService {
         participant.setParticipantType(ParticipantType.CLIENT);
 
         credentials.setParticipant(participant);
+
 
 
         var client = new Client();
@@ -46,6 +49,12 @@ public class ClientRegistrationService {
 
 
 
-        clientRepository.save(client);
+       Client clientSaved =  clientRepository.save(client);
+
+       return new RegisterClientResponseDto(
+                clientSaved.getId(),
+                clientSaved.getFullName(),
+                clientSaved.getCredentials().getEmail()
+        );
     }
 }

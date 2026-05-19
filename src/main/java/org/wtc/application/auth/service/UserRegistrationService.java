@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.wtc.application.auth.dto.RegisterUserResponseDto;
 import org.wtc.application.auth.dto.UserRegistrationDto;
 import org.wtc.application.auth.entity.AuthenticableUser;
 import org.wtc.application.auth.entity.RoleProfile;
@@ -26,7 +27,8 @@ public class UserRegistrationService {
 
 
     @Transactional
-    public void register(UserRegistrationDto dto) {
+    public RegisterUserResponseDto register(UserRegistrationDto dto) {
+
         var credentials = new AuthenticableUser();
         credentials.setEmail(dto.email());
         credentials.setPassword(passwordEncoder.encode(dto.password()));
@@ -37,15 +39,17 @@ public class UserRegistrationService {
 
         credentials.setParticipant(participant);
 
-
         var user = new User();
         user.setFullName(dto.name());
         user.setCredentials(credentials);
-        user.setFullName(dto.name());
         user.setParticipant(participant);
 
+        User savedUser = userRepository.save(user);
 
-
-        userRepository.save(user);
+        return new RegisterUserResponseDto(
+                savedUser.getId(),
+                savedUser.getFullName(),
+                savedUser.getCredentials().getEmail()
+        );
     }
 }

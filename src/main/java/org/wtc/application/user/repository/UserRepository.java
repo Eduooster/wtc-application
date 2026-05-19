@@ -14,8 +14,10 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByIdAndDeletedFalse(Long id);
+
     List<User> findAllByDeletedFalse();
 
 
     Optional<User> findByCredentials(AuthenticableUser authenticableUser);
+
 }

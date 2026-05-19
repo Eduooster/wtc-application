@@ -7,6 +7,7 @@ import org.wtc.application.campaing.entity.Campaign;
 import org.wtc.application.conversation.entity.Conversation;
 import org.wtc.application.message.enums.MessageStatus;
 
+import org.wtc.application.message.enums.MessageType;
 import org.wtc.application.participant.Participant;
 
 import java.time.LocalDateTime;
@@ -57,6 +58,10 @@ public class Message {
     private Campaign campaign;
 
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MessageType type;
+
 
     @Column(nullable = false)
     private Boolean deleted = false;
@@ -67,8 +72,8 @@ public class Message {
             Conversation conversation,
             String content,
             Participant sender,
-            Participant receiver
-    ) {
+            Participant receiver,
+            MessageType chat) {
         Message msg = new Message();
 
         msg.setConversation(conversation);
@@ -80,6 +85,7 @@ public class Message {
         msg.setStatus(MessageStatus.SENT);
         msg.setRead(false);
         msg.setDeleted(false);
+        msg.setType(chat);
 
         return msg;
     }
@@ -88,7 +94,8 @@ public class Message {
             Conversation conversation,
             String content,
             Participant clientParticipant,
-            Participant operatorParticipant
+            Participant operatorParticipant,
+            MessageType messageType
     ) {
         if (conversation == null) {
             throw new IllegalArgumentException("Conversation cannot be null");
@@ -113,42 +120,11 @@ public class Message {
         message.setStatus(MessageStatus.SENT);
         message.setRead(false);
         message.setDeleted(false);
+        message.setType(messageType);
 
         return message;
     }
 
-    public static Message createFirstMessageByOperator(
-            Conversation conversation,
-            String content,
-            Participant operatorParticipant,
-            Participant clientParticipant
-    ) {
-        if (conversation == null) {
-            throw new IllegalArgumentException("Conversation cannot be null");
-        }
-
-        if (content == null || content.isBlank()) {
-            throw new IllegalArgumentException("Content cannot be empty");
-        }
-
-        if (operatorParticipant == null) {
-            throw new IllegalArgumentException("Operator participant cannot be null");
-        }
-
-        Message message = new Message();
-
-        message.setConversation(conversation);
-        message.setContent(content);
-
-        message.setSender(operatorParticipant);
-        message.setReceiver(clientParticipant);
-
-        message.setStatus(MessageStatus.SENT);
-        message.setRead(false);
-        message.setDeleted(false);
-
-        return message;
-    }
 
 
 }

@@ -12,22 +12,19 @@ import java.time.LocalDateTime;
 @Data
 public class CampaignRequestDTO {
 
-    @NotBlank(message = "Campaign title is required")
-    @Size(max = 100, message = "Title cannot exceed 100 characters")
+    @NotBlank
+    @Size(max = 100)
     private String title;
 
-    @NotBlank(message = "Campaign content is required")
+    @NotBlank
     private String content;
 
-    @NotNull(message = "Campaign status is required")
-    private String status;
-
-    @FutureOrPresent(message = "Schedule date must be today or in the future")
+    @FutureOrPresent
     private LocalDateTime scheduledAt;
 
-    @NotNull(message = "Creator ID is required")
-    private Long creatorId;
-
-    @NotNull(message = "Target segment ID is required")
+    @NotNull
     private Long targetSegmentId;
+
+    @NotBlank
+    private String internalRoute;
 }

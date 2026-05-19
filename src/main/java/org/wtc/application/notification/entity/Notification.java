@@ -5,7 +5,9 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.wtc.application.campaing.entity.Campaign;
 import org.wtc.application.client.entity.Client;
+import org.wtc.application.conversation.entity.Conversation;
 import org.wtc.application.notification.enums.NotificationStatus;
+import org.wtc.application.participant.Participant;
 
 import java.time.LocalDateTime;
 
@@ -22,40 +24,19 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    private Conversation conversation;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String body;
+    @ManyToOne
+    private Participant receiver;
 
-    private String imageUrl;
+    private String previewContent;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private NotificationStatus status;
+    private boolean isRead = false;
 
-    @Column(nullable = false)
-    private Boolean read = false;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    private String fcmMessageId;
-
-    @Column(columnDefinition = "TEXT")
-    private String errorMessage;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "campaign_id")
-    private Campaign campaign;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    private LocalDateTime sentAt;
-
-    private LocalDateTime readAt;
-
-    private Boolean deleted;
+    public void markAsRead() {
+        this.isRead = true;
+    }
 }

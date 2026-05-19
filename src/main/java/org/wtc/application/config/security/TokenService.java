@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.wtc.application.auth.entity.AuthenticableUser;
@@ -14,7 +15,7 @@ import org.wtc.application.message.enums.ParticipantType;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-
+import java.util.List;
 
 
 @Service
@@ -29,14 +30,16 @@ public class TokenService {
 
             AuthenticableUser auth = (AuthenticableUser) usuario;
 
+            List<String> roles = auth.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .toList();
+
             var algoritmo = Algorithm.HMAC256(secret);
 
             return JWT.create()
                     .withIssuer("API wtc")
                     .withSubject(auth.getUsername())
-
-
-
+                    .withClaim("roles", roles)
                     .withExpiresAt(dataExpiracao())
                     .sign(algoritmo);
 

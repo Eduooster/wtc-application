@@ -5,8 +5,10 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import org.wtc.application.conversation.dto.ConversationCreationContext;
 import org.wtc.application.conversation.enums.ConversationOrigin;
 import org.wtc.application.conversation.enums.ConversationStatus;
+import org.wtc.application.conversation.enums.ConversationTypeOrigin;
 import org.wtc.application.message.entitity.Message;
 import org.wtc.application.participant.Participant;
 
@@ -71,39 +73,30 @@ public class Conversation {
     @Column(nullable = false)
     private ConversationOrigin origin;
 
+    @Enumerated(EnumType.STRING)
+    private ConversationTypeOrigin conversationTypeOrigin;
+
+
     public void updateLastMessage() {
         this.lastMessageAt = LocalDateTime.now();
     }
-    public static Conversation applyClientContext(
-            Conversation conversation,
-            Participant clientParticipant,
-            String title
-    ) {
 
-        conversation.setTitle(title);
-        conversation.getParticipants().add(clientParticipant);
-        conversation.setStatus(ConversationStatus.WAITING_OPERATOR);
+
+    public static Conversation create(ConversationCreationContext ctx) {
+
+        Conversation conversation = new Conversation();
+
+        conversation.setTitle(ctx.title());
+        conversation.setParticipants(new HashSet<>(ctx.participants()));
+        conversation.setStatus(ctx.status());
+        conversation.setOrigin(ctx.origin());
+        conversation.setConversationTypeOrigin(ctx.typeOrigin());
+
+        conversation.setActive(true);
+        conversation.setDeleted(false);
         conversation.setLastMessageAt(LocalDateTime.now());
-        conversation.setAssignedOperator(null);
-        conversation.setOrigin(ConversationOrigin.CLIENT);
-
-        return conversation;
-    }
-
-
-    public static Conversation applyOperatorContext(
-            Conversation conversation,
-            Participant operatorParticipant,
-            String title
-    ) {
-
-        conversation.setTitle(title);
-        conversation.getParticipants().add(operatorParticipant);
-        conversation.setStatus(ConversationStatus.IN_PROGRESS);
+        conversation.setAssignedOperator(ctx.assignedOperator());
         conversation.setLastMessageAt(LocalDateTime.now());
-        conversation.setAssignedOperator(operatorParticipant);
-        conversation.setOrigin(ConversationOrigin.OPERATOR);
-
 
         return conversation;
     }
