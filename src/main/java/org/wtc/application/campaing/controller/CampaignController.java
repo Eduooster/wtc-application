@@ -138,7 +138,7 @@ public class CampaignController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
-    @Operation(summary = "Excluir logicamente uma campanha", description = "Marca uma campanha como deletada (soft delete) no sistema.")
+    @Operation(summary = "Excluir logicamente uma campanha", description = "Marca uma campanha como deletda (soft delete) no sistema.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Campanha excluída com sucesso (Sem conteúdo de retorno).", content = @Content),
             @ApiResponse(responseCode = "404", description = "Campanha não encontrada.", content = @Content)
