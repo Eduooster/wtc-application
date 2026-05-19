@@ -37,15 +37,15 @@ public class SegmentServiceImpl implements ISegmentService {
 
     @Override
     @Transactional
-    public SegmentResponseDTO createSegment(SegmentRequestDTO request, Long userId) {
+    public SegmentResponseDTO createSegment(SegmentRequestDTO request, AuthenticableUser userId) {
 
-        log.info("user id: " + userId );
+
 
         if (repository.existsByNameIgnoreCase(request.getName())) {
             throw new RuntimeException("Já existe um segmento com o nome: " + request.getName());
         }
 
-        User user = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User not found"));
+
 
         Segment segment = mapper.toEntiy(request);
 
@@ -54,16 +54,6 @@ public class SegmentServiceImpl implements ISegmentService {
 
         Segment savedSegment = repository.save(segment);
 
-        auditRepository.save(
-                new Audit(
-                        "SEGMENT_CREATED",
-                        "Segment created with name: " + savedSegment.getName(),
-                        user,
-                        savedSegment.getId(),
-                        "Segment",
-                        false
-                )
-        );
 
 
         return mapper.toDto(savedSegment);

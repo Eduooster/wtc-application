@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+
 public class ConversationFlowIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
@@ -141,7 +142,7 @@ public class ConversationFlowIntegrationTest extends BaseIntegrationTest {
 
 
         Map<String, List<String>> operatorAssociation = Map.of("segmentIds", List.of(segmentBId));
-        mockMvc.perform(patch("/user/" + operatorId+ "/segments")
+        mockMvc.perform(patch("/users/" + operatorId+ "/segments")
                         .header("Authorization", operatorToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(operatorAssociation)))
@@ -207,7 +208,7 @@ public class ConversationFlowIntegrationTest extends BaseIntegrationTest {
                 .andExpect(status().isNoContent());
 
         // Fazer a mesma coisa para o operador se o id dele também mudar:
-        mockMvc.perform(patch("/user/" + this.operatorId + "/segments")
+        mockMvc.perform(patch("/users/" + this.operatorId + "/segments")
                         .header("Authorization", operatorToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(associationPayload)))

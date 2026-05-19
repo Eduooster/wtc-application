@@ -56,7 +56,7 @@ public class SegmentController {
     })
     public ResponseEntity<SegmentResponseDTO> createSegment(@Valid @RequestBody SegmentRequestDTO request ,@AuthenticationPrincipal @Parameter(hidden = true) AuthenticableUser user)
     {
-        SegmentResponseDTO response = segmentService.createSegment(request,user.getId());
+        SegmentResponseDTO response = segmentService.createSegment(request,user);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

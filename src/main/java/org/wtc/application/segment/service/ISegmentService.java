@@ -2,13 +2,14 @@ package org.wtc.application.segment.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.wtc.application.auth.entity.AuthenticableUser;
 import org.wtc.application.segment.dto.SegmentRequestDTO;
 import org.wtc.application.segment.dto.SegmentResponseDTO;
 
 import java.util.List;
 
 public interface ISegmentService {
-    SegmentResponseDTO createSegment(SegmentRequestDTO request,Long userId);
+    SegmentResponseDTO createSegment(SegmentRequestDTO request, AuthenticableUser userId);
     SegmentResponseDTO findById(Long id);
     Page<SegmentResponseDTO> findAll(Pageable pageable);
     SegmentResponseDTO updateSegment(Long id, SegmentRequestDTO request);

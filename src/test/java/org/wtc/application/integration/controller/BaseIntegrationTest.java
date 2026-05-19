@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
+import org.wtc.application.audit.repository.AuditRepository;
 import org.wtc.application.client.repository.ClientRepository;
 import org.wtc.application.conversation.repository.ConversationRepository;
 import org.wtc.application.message.repository.MessageRepository;
@@ -77,6 +78,9 @@ public abstract class BaseIntegrationTest {
     @Autowired
     private SegmentRepository segmentRepository;
 
+    @Autowired
+    private  AuditRepository auditRepository;
+
     @BeforeEach
     void setUp() throws Exception {
 
@@ -84,6 +88,7 @@ public abstract class BaseIntegrationTest {
         messageRepository.deleteAll();
         conversationRepository.deleteAll();
         clientRepository.deleteAll();
+        auditRepository.deleteAll();
         userRepository.deleteAll();
         segmentRepository.deleteAll();
 
