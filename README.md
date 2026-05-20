@@ -13,7 +13,6 @@ auditoria, documentação com Swagger, mensageria assíncrona, notificações e 
 ### 1. Clonar o repositório
 ```bash
 git clone <https://github.com/Eduooster/wtc-application.git>
-cd esg =
 ```
 
 
