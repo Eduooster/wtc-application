@@ -3,6 +3,7 @@ package org.wtc.application.client.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.wtc.application.auth.entity.AuthenticableUser;
 import org.wtc.application.client.dto.ClientRequestDTO;
@@ -57,6 +58,7 @@ public class ClientController {
                     content = @Content(schema = @Schema(implementation = ClientResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Dados enviados na requisição são inválidos.", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
     public ResponseEntity<ClientResponseDTO> createClient(@Valid @RequestBody ClientRequestDTO request,@AuthenticationPrincipal @Parameter(hidden = true) AuthenticableUser user) {
         ClientResponseDTO response = clientService.createClient(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -75,7 +77,7 @@ public class ClientController {
         updateSegments.updateClientSegments(clientId, request);
         return ResponseEntity.noContent().build();
     }
-
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
     @PutMapping("/{userId}/tags")
     @Operation(summary = "Atualizar tags do cliente", description = "Substitui ou atualiza as etiquetas (tags) associadas ao cliente informado.")
     @ApiResponses(value = {
@@ -91,6 +93,7 @@ public class ClientController {
     }
 
     @PostMapping("/firebase-token")
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN','CLIENT')")
     @Operation(summary = "Salvar token Firebase do cliente autenticado", description = "Associa o token de notificações push do Firebase ao perfil do cliente logado.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Token Firebase salvo com sucesso.", content = @Content),
@@ -105,6 +108,7 @@ public class ClientController {
     }
 
     @PutMapping("/{id}/device-token")
+    @PreAuthorize("hasAnyRole('CLIENT')")
     @Operation(summary = "Atualizar token de dispositivo (Firebase) por ID", description = "Atualiza o token de push do dispositivo de um cliente específico com base no ID fornecido.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Token de dispositivo atualizado com sucesso.", content = @Content),
@@ -119,6 +123,7 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
     @Operation(summary = "Buscar cliente por ID", description = "Busca detalhada das informações cadastrais de um cliente pelo seu identificador.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cliente localizado com sucesso.",
@@ -130,6 +135,7 @@ public class ClientController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
     @Operation(summary = "Listar todos os clientes", description = "Retorna uma lista contendo todos os clientes ativos cadastrados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de clientes recuperada com sucesso.",
@@ -140,6 +146,7 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
     @Operation(summary = "Atualizar dados cadastrais do cliente", description = "Modifica as informações gerais de um cliente existente.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cliente atualizado com sucesso.",
@@ -154,6 +161,7 @@ public class ClientController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
     @Operation(summary = "Remover um cliente", description = "Realiza a exclusão do cliente do sistema através do ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Cliente removido com sucesso.", content = @Content),

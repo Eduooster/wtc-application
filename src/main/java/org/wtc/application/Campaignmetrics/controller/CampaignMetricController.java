@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.wtc.application.Campaignmetrics.entity.CampaignMetric;
 import org.wtc.application.campaing.service.CreateCampaign;
@@ -32,6 +33,7 @@ public class CampaignMetricController {
 
     private final CreateCampaign campaignService;
 
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
     @GetMapping("/{campaignCode}")
     @Operation(
             summary = "Processar clique na campanha",

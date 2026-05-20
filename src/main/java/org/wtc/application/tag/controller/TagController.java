@@ -5,6 +5,7 @@ package org.wtc.application.tag.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.wtc.application.auth.entity.AuthenticableUser;
 import org.wtc.application.tag.dto.TagRequestDTO;
@@ -41,6 +42,7 @@ public class TagController {
     private final ITagService tagService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
     @Operation(summary = "Criar uma nova tag", description = "Cadastra uma nova etiqueta identificadora no sistema.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Tag criada com sucesso.",
@@ -53,6 +55,7 @@ public class TagController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
     @Operation(summary = "Buscar tag por ID", description = "Retorna os detalhes de uma etiqueta específica através do ID informado.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Tag localizada com sucesso.",
@@ -64,6 +67,7 @@ public class TagController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
     @Operation(summary = "Listar todas as tags", description = "Retorna uma lista completa de todas as etiquetas cadastradas.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de tags recuperada com sucesso.",
@@ -74,6 +78,7 @@ public class TagController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
     @Operation(summary = "Atualizar uma tag existente", description = "Modifica as propriedades de uma etiqueta baseando-se no ID especificado.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Tag atualizada com sucesso.",
@@ -89,6 +94,7 @@ public class TagController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
     @Operation(summary = "Remover uma tag", description = "Exclui definitivamente uma tag do sistema por meio do seu ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Tag deletada com sucesso.", content = @Content),

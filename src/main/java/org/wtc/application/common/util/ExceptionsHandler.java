@@ -51,6 +51,12 @@ public class ExceptionsHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(detalhar(ex));
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, String>> runTimeException(RuntimeException ex) {
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(detalhar(ex));
+    }
+
 
 
     public Map<String, String> detalhar(Exception ex) {

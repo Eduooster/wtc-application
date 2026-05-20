@@ -23,7 +23,7 @@ public class FirebaseConfig {
             InputStream serviceAccount =
                     getClass()
                             .getClassLoader()
-                            .getResourceAsStream("wtc-backend-firebase-adminsdk-fbsvc-1f065ab323.json");
+                            .getResourceAsStream("wtc-backend-firebase-adminsdk-fbsvc-c3248ef945.json");
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))

@@ -5,6 +5,7 @@ package org.wtc.application.user.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.wtc.application.auth.entity.AuthenticableUser;
 import org.wtc.application.user.dto.UpdateUserSegmentsRequestDTO;
@@ -44,6 +45,7 @@ public class UserController {
     private final UpdateUserSegments updateUserSegments;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Cadastrar um novo usuário", description = "Registra um novo usuário interno (operador ou administrador) no sistema.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Usuário cadastrado com sucesso.",
@@ -55,6 +57,7 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PatchMapping("/{userId}/segments")
     @Operation(summary = "Atualizar segmentos vinculados ao usuário", description = "Modifica a associação de segmentos de atendimento sob responsabilidade deste usuário.")
     @ApiResponses(value = {
@@ -70,6 +73,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Buscar usuário por ID", description = "Busca detalhada das informações cadastrais de um usuário interno pelo identificador único.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário localizado com sucesso.",
@@ -81,6 +85,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Listar todos os usuários", description = "Retorna uma lista contendo todos os operadores e administradores cadastrados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de usuários recuperada com sucesso.",
@@ -91,6 +96,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Atualizar dados do usuário", description = "Modifica as informações gerais e credenciais de um usuário interno existente.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso.",
@@ -98,6 +104,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Payload enviado contém dados inválidos.", content = @Content),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado.", content = @Content)
     })
+
     public ResponseEntity<UserResponseDTO> updateUser(
             @PathVariable @Parameter(description = "ID do usuário a ser editado", example = "1") Long id,
             @Valid @RequestBody UserRequestDTO request,
@@ -106,6 +113,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Deletar um usuário", description = "Remove do sistema o cadastro do usuário interno informado pelo ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Usuário removido com sucesso.", content = @Content),

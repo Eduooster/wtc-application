@@ -3,6 +3,7 @@ package org.wtc.application.message.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.wtc.application.auth.entity.AuthenticableUser;
@@ -35,6 +36,7 @@ public class MessageController {
     private final DeleteMessageService deleteMessage;
     private final MarkMessageAsReadService markMessageAsReadService;
 
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN','CLIENT')")
     @PostMapping
     @Operation(summary = "Enviar uma nova mensagem", description = "Envia uma mensagem de texto ou mídia para dentro de uma conversa ativa.")
     @ApiResponses(value = {
@@ -47,7 +49,7 @@ public class MessageController {
         MessageResponseDTO response = sendMessageService.sendMessage(requestDTO,authenticableUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN','CLIENT')")
     @PatchMapping("/{id}/read")
     @Operation(summary = "Marcar mensagem como lida", description = "Atualiza o status de leitura de uma mensagem específica para o usuário conectado.")
     @ApiResponses(value = {
@@ -59,6 +61,7 @@ public class MessageController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN','CLIENT')")
     @DeleteMapping("/{id}")
     @Operation(summary = "Excluir uma mensagem", description = "Remove ou revoga uma mensagem enviada com base no ID fornecido e nas permissões do usuário.")
     @ApiResponses(value = {

@@ -88,6 +88,7 @@ public class ConversationController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
     @Operation(summary = "Filtrar conversas globais por status", description = "Recupera uma página contendo todas as conversas do sistema filtradas pelo estado solicitado (ex: OPEN, CLOSED).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Página de conversas carregada com sucesso.", content = @Content)

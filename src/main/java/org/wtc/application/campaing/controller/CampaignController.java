@@ -99,6 +99,7 @@ public class CampaignController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN')")
     @Operation(summary = "Buscar campanha por ID", description = "Retorna os detalhes de uma campanha específica através do seu identificador único.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Campanha encontrada com sucesso.",
