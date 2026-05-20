@@ -17,7 +17,7 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 
 
-
+// Recomendavel rodar com o perfil TEST
 class UserConversationControllerTest extends BaseApiTest {
 
 

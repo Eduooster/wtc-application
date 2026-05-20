@@ -6,7 +6,6 @@ import org.wtc.application.auth.entity.AuthenticableUser;
 import org.wtc.application.user.entity.User;
 
 
-import javax.swing.text.html.Option;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByCredentials(AuthenticableUser authenticableUser);
 
+
+
+    Optional<User> findByCredentials_Email(String email);
 }

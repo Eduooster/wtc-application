@@ -131,6 +131,7 @@ public class SendCampaign {
 
     private void publishCampaignNotificationEvent(Client client, Campaign campaign) {
         if (client.getFirebaseToken() != null && !client.getFirebaseToken().isEmpty()) {
+            log.info("sending campaign notification");
             applicationEventPublisher.publishEvent(
                     new CampaignNotificationEvent(
                             client.getFirebaseToken(),

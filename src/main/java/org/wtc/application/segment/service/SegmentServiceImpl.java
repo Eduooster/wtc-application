@@ -32,12 +32,13 @@ public class SegmentServiceImpl implements ISegmentService {
     private final AuditRepository auditRepository;
     private  final UserRepository userRepository;
 
+
     @Qualifier("segmentMapper")
     private final SegmentMapper mapper;
 
     @Override
     @Transactional
-    public SegmentResponseDTO createSegment(SegmentRequestDTO request, AuthenticableUser userId) {
+    public SegmentResponseDTO createSegment(SegmentRequestDTO request, AuthenticableUser user) {
 
 
 
@@ -53,6 +54,9 @@ public class SegmentServiceImpl implements ISegmentService {
         segment.setDeleted(false);
 
         Segment savedSegment = repository.save(segment);
+
+        User creator = userRepository.findByCredentials(user)
+                .orElseThrow(() -> new EntityNotFoundException("Creator not found"));
 
 
 

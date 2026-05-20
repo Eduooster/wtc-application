@@ -88,7 +88,6 @@ public abstract class BaseIntegrationTest {
         messageRepository.deleteAll();
         conversationRepository.deleteAll();
         clientRepository.deleteAll();
-        auditRepository.deleteAll();
         userRepository.deleteAll();
         segmentRepository.deleteAll();
 

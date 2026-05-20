@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wtc.application.Campaignmetrics.CampaignMetricRepository;
 import org.wtc.application.Campaignmetrics.entity.CampaignMetric;
+import org.wtc.application.audit.entity.Audit;
+import org.wtc.application.audit.repository.AuditRepository;
 import org.wtc.application.auth.entity.AuthenticableUser;
 import org.wtc.application.campaing.dto.CampaignRequestDTO;
 import org.wtc.application.campaing.dto.CampaignResponseDTO;
@@ -25,6 +27,7 @@ public class CreateCampaign {
     private final SegmentRepository segmentRepository;
     private final CampaignRepository campaignRepository;
     private final CampaignMetricRepository campaignMetricRepository;
+    private final AuditRepository auditRepository;
 
 
 
@@ -57,6 +60,18 @@ public class CreateCampaign {
         metric.setCampaign(savedCampaign);
         metric.setClicksCount(0L);
         campaignMetricRepository.save(metric);
+
+        auditRepository.save(
+                new Audit(
+                        "CAMPAIGN_CREATED",
+                        "Campaign created " ,
+                        creator
+                        ,
+                        savedCampaign.getId(),
+                        "Campaign",
+                        false
+                )
+        );
 
         return new CampaignResponseDTO(savedCampaign);
     }

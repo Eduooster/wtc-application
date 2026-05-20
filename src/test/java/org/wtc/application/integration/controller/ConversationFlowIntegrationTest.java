@@ -32,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 
+// Recomendavel rodar com o perfil TEST
 public class ConversationFlowIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
@@ -39,6 +40,8 @@ public class ConversationFlowIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+
 
 
 

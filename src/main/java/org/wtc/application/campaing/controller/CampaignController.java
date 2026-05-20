@@ -94,7 +94,7 @@ public class CampaignController {
             @AuthenticationPrincipal @Parameter(hidden = true) AuthenticableUser authUser, @RequestBody CampaignScheduleRequestDto request
     ){
 
-        scheduleCampaign.scheduleCampaign(campaignId,request,authUser.getId());
+        scheduleCampaign.scheduleCampaign(campaignId,request,authUser.getUsername());
         return ResponseEntity.ok().build();
     }
 

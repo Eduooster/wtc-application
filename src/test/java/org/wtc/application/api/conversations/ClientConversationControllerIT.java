@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 
-
+// Recomendavel rodar com o perfil TEST
 class ClientConversationControllerIT extends BaseApiTest {
 
     @BeforeEach

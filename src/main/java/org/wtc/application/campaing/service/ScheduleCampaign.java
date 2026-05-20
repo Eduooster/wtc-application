@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wtc.application.audit.entity.Audit;
 import org.wtc.application.audit.repository.AuditRepository;
+
+import org.wtc.application.auth.repository.AuthenticableUserRepository;
 import org.wtc.application.campaing.dto.CampaignResponseDTO;
 import org.wtc.application.campaing.dto.CampaignScheduleRequestDto;
 import org.wtc.application.campaing.entity.Campaign;
@@ -34,16 +36,20 @@ public class ScheduleCampaign {
     private final SendCampaign sendCampaign;
     private final AuditRepository auditRepository;
     private final UserRepository userRepository;
+    private final AuthenticableUserRepository authenticableUserRepository;
 
 
     @Transactional
-    public CampaignResponseDTO scheduleCampaign(Long id, CampaignScheduleRequestDto request,Long idUser) {
+    public CampaignResponseDTO scheduleCampaign(Long id, CampaignScheduleRequestDto request,String email) {
 
         Campaign campaign = campaignRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new CampaignNotFoundException("Campanha não encontrada"));
 
 
-        User user = userRepository.findById(idUser).orElseThrow(()->new EntityNotFoundException("User not found"));
+
+        User user = userRepository.findByCredentials_Email(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
 
         campaign.setStatus(CampaignStatus.SCHEDULED);
         campaign.setScheduledAt(request.scheduleAt());
@@ -68,7 +74,8 @@ public class ScheduleCampaign {
                 new Audit(
                         "CAMPAIGN_SCHEDULED",
                         "Campaign scheduled for " + request.scheduleAt(),
-                        user,
+                        user
+                        ,
                         savedCampaign.getId(),
                         "Campaign",
                         false
