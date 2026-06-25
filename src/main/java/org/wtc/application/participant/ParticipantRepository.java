@@ -14,7 +14,6 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
 
 
 
-   Optional<Participant> findByParticipantTypeAndRefId(ParticipantType participantType, Long refId);
 
 
     Optional<Participant> findByParticipantType(ParticipantType participantType);

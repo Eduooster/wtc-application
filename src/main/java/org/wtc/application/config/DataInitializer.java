@@ -24,5 +24,6 @@ public class DataInitializer implements CommandLineRunner {
                     system.setParticipantType(ParticipantType.SYSTEM);
                     return participantRepository.save(system);
                 });
+
     }
 }

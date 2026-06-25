@@ -22,19 +22,6 @@ public class MarkMessageAsReadService {
                 .orElseThrow(() -> new EntityNotFoundException("Message not found"));
 
 
-        Long currentUserId = authenticableUser.getParticipant().getId();
-        var currentUserType = authenticableUser.getParticipant().getParticipantType();
-
-
-        var receiver = message.getReceiver();
-
-
-        boolean isReceiver = receiver.getId().equals(currentUserId)
-                && receiver.getParticipantType().equals(currentUserType);
-
-        if (!isReceiver) {
-            throw new AccessDeniedException("User is not authorized to read this message");
-        }
 
         message.setRead(true);
 

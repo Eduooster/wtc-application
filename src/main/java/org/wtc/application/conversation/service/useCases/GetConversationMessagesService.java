@@ -1,4 +1,4 @@
-package org.wtc.application.conversation.service;
+package org.wtc.application.conversation.service.useCases;
 
 
 
@@ -10,12 +10,10 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wtc.application.auth.entity.AuthenticableUser;
-import org.wtc.application.auth.entity.RoleProfile;
 import org.wtc.application.conversation.entity.Conversation;
 import org.wtc.application.conversation.repository.ConversationRepository;
 import org.wtc.application.message.MessageMapper;
 import org.wtc.application.message.dto.MessageResponseDTO;
-import org.wtc.application.message.enums.ParticipantType;
 import org.wtc.application.message.repository.MessageRepository;
 import org.wtc.application.participant.Participant;
 import org.wtc.application.participant.ParticipantRepository;

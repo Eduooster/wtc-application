@@ -16,8 +16,6 @@ public record MessageResponseDTO(
         ParticipantType senderType,
         Long senderId,
 
-        ParticipantType receiverType,
-        Long receiverId,
 
         Boolean read,
         LocalDateTime sentAt,
@@ -37,14 +35,6 @@ public record MessageResponseDTO(
 
                 message.getSender() != null
                         ? message.getSender().getId()
-                        : null,
-
-                message.getReceiver() != null
-                        ? message.getReceiver().getParticipantType()
-                        : null,
-
-                message.getReceiver() != null
-                        ? message.getReceiver().getId()
                         : null,
 
 

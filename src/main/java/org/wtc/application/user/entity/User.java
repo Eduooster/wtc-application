@@ -66,12 +66,7 @@ public class User {
     )
     private Set<Segment> segments = new HashSet<>();
 
-    @PostPersist
-    public void afterSave() {
-        if (this.participant != null) {
-            this.participant.setRefId(this.id);
-        }
-    }
+
 
 
 }

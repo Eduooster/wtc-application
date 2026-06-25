@@ -1,10 +1,8 @@
-package org.wtc.application.conversation.service;
+package org.wtc.application.conversation.service.validation;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-import org.wtc.application.conversation.entity.Conversation;
 import org.wtc.application.conversation.repository.ConversationRepository;
 import org.wtc.application.participant.Participant;
 

@@ -18,41 +18,12 @@ import org.wtc.application.user.repository.UserRepository;
 @RequiredArgsConstructor
 public class SegmentValidationService {
 
-    private final UserRepository userRepository;
-    private final ClientRepository clientRepository;
-
-    public void validateOperatorForConversation(AuthenticableUser authenticatedUser, Conversation conversation) {
-
-        User operator = userRepository.findByCredentials(authenticatedUser)
-                .orElseThrow(() -> new EntityNotFoundException("Operator user not found"));
 
 
-        Participant clientParticipant = conversation.getParticipants()
-                .stream()
-                .filter(p -> p.getParticipantType() == ParticipantType.CLIENT)
-                .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Client participant not found in this conversation"));
 
 
-        Client client = clientRepository.findById(clientParticipant.getRefId())
-                .orElseThrow(() -> new EntityNotFoundException("Client business entity not found"));
 
-
-        this.validate(operator, client);
-    }
-
-    public void validateByIds(Long operatorId, Long clientId) {
-        User operator = userRepository.findById(operatorId)
-                .orElseThrow(() -> new EntityNotFoundException("Operador não encontrado"));
-
-        Client client = clientRepository.findById(clientId)
-                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
-
-        validate(operator, client);
-    }
-
-
-    public void validate(User operator, Client client) {
+    public void ensureCompatibleSegments(User operator, Client client) {
         boolean hasCompatibleSegment = operator.getSegments()
                 .stream()
                 .anyMatch(segment -> client.getSegments().contains(segment));

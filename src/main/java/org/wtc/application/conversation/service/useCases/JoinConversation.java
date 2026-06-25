@@ -1,4 +1,4 @@
-package org.wtc.application.conversation.service;
+package org.wtc.application.conversation.service.useCases;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -7,16 +7,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.wtc.application.auth.entity.AuthenticableUser;
 import org.wtc.application.conversation.entity.Conversation;
 import org.wtc.application.conversation.repository.ConversationRepository;
-import org.wtc.application.participant.Participant;
-import org.wtc.application.participant.ParticipantRepository;
-import org.wtc.application.segment.service.SegmentValidationService;
+import org.wtc.application.segment.service.ConversationAcessService;
 
 @Service
 @RequiredArgsConstructor
 public class JoinConversation {
 
     private final ConversationRepository conversationRepository;
-    private final SegmentValidationService segmentValidationService;
+
+    private final ConversationAcessService conversationAcessService;
 
 
 
@@ -27,7 +26,7 @@ public class JoinConversation {
                 .orElseThrow(() -> new EntityNotFoundException("Conversation not found"));
 
 
-        segmentValidationService.validateOperatorForConversation(authenticatedUser, conversation);
+        conversationAcessService.validateOperatorCanJoinConversation(authenticatedUser, conversation);
 
         conversation.getParticipants().add(authenticatedUser.getParticipant());
 

@@ -1,14 +1,11 @@
 package org.wtc.application.campaing.service;
 
-import com.google.firebase.internal.FirebaseService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.el.util.MessageFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wtc.application.audit.repository.AuditRepository;
-import org.wtc.application.auth.entity.AuthenticableUser;
 import org.wtc.application.campaing.dto.CampaignNotificationEvent;
 import org.wtc.application.campaing.entity.Campaign;
 import org.wtc.application.campaing.enums.CampaignStatus;
@@ -19,11 +16,7 @@ import org.wtc.application.client.repository.ClientRepository;
 import org.wtc.application.conversation.entity.Conversation;
 import org.wtc.application.conversation.enums.ConversationOrigin;
 import org.wtc.application.conversation.enums.ConversationStatus;
-import org.wtc.application.conversation.enums.ConversationTypeOrigin;
-import org.wtc.application.conversation.repository.ConversationRepository;
-import org.wtc.application.conversation.service.ConversationResolverService;
-import org.wtc.application.integration.fireBase.FireBaseService;
-import org.wtc.application.integration.fireBase.FirebaseNotificationService;
+import org.wtc.application.conversation.service.resolver.ConversationResolverService;
 import org.wtc.application.message.entitity.Message;
 import org.wtc.application.message.enums.MessageStatus;
 import org.wtc.application.message.enums.MessageType;
@@ -98,7 +91,7 @@ public class SendCampaign {
                 participants,
                 ConversationOrigin.CAMPAIGN,
                 ConversationStatus.WAITING_OPERATOR,
-                ConversationTypeOrigin.CAMPAIGN,
+
                 campaignTitle,
                 null
         );

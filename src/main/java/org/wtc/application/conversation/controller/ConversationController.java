@@ -17,7 +17,7 @@ import org.wtc.application.conversation.dto.ConversationResponseDto;
 import org.wtc.application.conversation.entity.Conversation;
 import org.wtc.application.conversation.entity.UserConversationRequestDTO;
 import org.wtc.application.conversation.enums.ConversationStatus;
-import org.wtc.application.conversation.service.*;
+import org.wtc.application.conversation.service.useCases.*;
 import org.wtc.application.message.dto.MessageResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,17 +26,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.wtc.application.message.dto.SendMessageRequestDTO;
+import org.wtc.application.message.service.SendMessageService;
 
 @RestController
 @RequestMapping("/conversations")
@@ -51,6 +42,7 @@ public class ConversationController {
     private final AssignedConversationService assignedConversationService;
     private final JoinConversation joinConversation;
     private final FindAllOpenConversations findAllOpenConversations;
+    private final SendMessageService sendMessageService;
 
     @PostMapping("/client")
     @PreAuthorize("hasRole('CLIENT')")
@@ -170,4 +162,21 @@ public class ConversationController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN','CLIENT')")
+    @PostMapping("/{conversationId}/messages")
+    @Operation(summary = "Enviar uma nova mensagem", description = "Envia uma mensagem de texto ou mídia para dentro de uma conversa ativa.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Mensagem enviada e registrada com sucesso.",
+                    content = @Content(schema = @Schema(implementation = MessageResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Dados da requisição incorretos ou conversa inválida.", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Usuário não autenticado.", content = @Content)
+    })
+
+    public ResponseEntity<MessageResponseDTO> sendMessage(@RequestBody SendMessageRequestDTO requestDTO, @AuthenticationPrincipal @Parameter(hidden = true) AuthenticableUser authenticableUser, @PathVariable @Parameter(description = "ID da conversa para ingressar", example = "1") Long conversationId) {
+        MessageResponseDTO response = sendMessageService.sendMessage(requestDTO,authenticableUser,conversationId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+
 }

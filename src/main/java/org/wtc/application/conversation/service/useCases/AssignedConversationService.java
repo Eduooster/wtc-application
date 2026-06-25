@@ -1,4 +1,4 @@
-package org.wtc.application.conversation.service;
+package org.wtc.application.conversation.service.useCases;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -40,21 +40,19 @@ public class AssignedConversationService {
 
         validateOperatorCanAssign(conversation, authenticatedUser);
 
-        Participant operatorParticipant = participantRepository.findByParticipantTypeAndRefId(
-                authenticatedUser.getParticipant().getParticipantType(),
-                authenticatedUser.getParticipant().getRefId()
-        ).orElseThrow(() -> new EntityNotFoundException("Operator participant not found"));
+
+        Participant operatorParticipant = participantRepository
+                .findById(authenticatedUser.getParticipant().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Participant not found"));
+
+
+        conversation.getParticipants().add(operatorParticipant);
 
 
         conversation.setAssignedOperator(operatorParticipant);
-
-
-        conversation.getParticipants().add(operatorParticipant);
-        conversation.getParticipants().add(operatorParticipant);
-
         conversation.setStatus(ConversationStatus.IN_PROGRESS);
 
-        return conversationRepository.save(conversation);
+        return conversationRepository.saveAndFlush(conversation);
     }
 
     public void validateOperatorCanAssign(Conversation conversation, AuthenticableUser authenticableUser) {
@@ -66,13 +64,17 @@ public class AssignedConversationService {
             throw new InvalidConversationStatusException("Conversation is not available for assignment");
         }
 
+
+
         validateSegmentCompatibility(conversation, authenticableUser);
     }
 
-    private void validateSegmentCompatibility(Conversation conversation, AuthenticableUser authenticatedUser) {
+    private void validateSegmentCompatibility(
+            Conversation conversation,
+            AuthenticableUser authenticatedUser) {
+
         User operator = userRepository.findByCredentials(authenticatedUser)
                 .orElseThrow(() -> new EntityNotFoundException("Operator user not found"));
-
 
         Participant clientParticipant = conversation.getParticipants()
                 .stream()
@@ -80,9 +82,8 @@ public class AssignedConversationService {
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException("Client participant not found in this conversation"));
 
-        Client client = clientRepository.findById(clientParticipant.getRefId())
+        Client client = clientRepository.findByParticipant(clientParticipant)
                 .orElseThrow(() -> new EntityNotFoundException("Client business entity not found"));
-
 
         boolean hasCompatibleSegment = operator.getSegments()
                 .stream()

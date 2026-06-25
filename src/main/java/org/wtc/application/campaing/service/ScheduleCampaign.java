@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,11 +33,12 @@ public class ScheduleCampaign {
     private static final Logger log = LoggerFactory.getLogger(ScheduleCampaign.class);
     private final CampaignRepository campaignRepository;
     private final CampaignMapper campaignMapper;
+    @Qualifier("taskScheduler")
     private final TaskScheduler taskScheduler;
     private final SendCampaign sendCampaign;
     private final AuditRepository auditRepository;
     private final UserRepository userRepository;
-    private final AuthenticableUserRepository authenticableUserRepository;
+
 
 
     @Transactional

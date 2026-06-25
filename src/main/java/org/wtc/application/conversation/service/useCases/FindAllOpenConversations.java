@@ -1,16 +1,13 @@
-package org.wtc.application.conversation.service;
+package org.wtc.application.conversation.service.useCases;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.wtc.application.conversation.dto.ConversationResponseDto;
-import org.wtc.application.conversation.entity.Conversation;
 import org.wtc.application.conversation.enums.ConversationStatus;
 import org.wtc.application.conversation.mapper.ConversationMapper;
 import org.wtc.application.conversation.repository.ConversationRepository;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

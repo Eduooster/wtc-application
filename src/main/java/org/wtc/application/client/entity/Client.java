@@ -83,12 +83,6 @@ public class Client {
 
 
 
-    @PostPersist
-    public void afterSave() {
-        if (this.participant != null) {
-            this.participant.setRefId(this.id);
-        }
-    }
 
 
 }

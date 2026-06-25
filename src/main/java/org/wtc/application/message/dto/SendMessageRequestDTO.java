@@ -5,10 +5,9 @@ import org.wtc.application.message.enums.ParticipantType;
 
 public record SendMessageRequestDTO (
         @NotBlank
-        String content,
-        Long recipientId,
-        Long conversationId,
-        ParticipantType recipientType
+        String content
+        //FUTURAMENTE ADD MESSAGEtype
+
 ) {
 
 }

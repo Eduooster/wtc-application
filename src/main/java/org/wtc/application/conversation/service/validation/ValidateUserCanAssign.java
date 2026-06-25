@@ -1,8 +1,4 @@
-package org.wtc.application.conversation.service;
-
-import org.wtc.application.conversation.entity.Conversation;
-import org.wtc.application.conversation.enums.ConversationStatus;
-import org.wtc.application.participant.Participant;
+package org.wtc.application.conversation.service.validation;
 
 public class ValidateUserCanAssign {
 

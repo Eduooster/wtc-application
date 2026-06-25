@@ -8,7 +8,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.wtc.application.conversation.dto.ConversationCreationContext;
 import org.wtc.application.conversation.enums.ConversationOrigin;
 import org.wtc.application.conversation.enums.ConversationStatus;
-import org.wtc.application.conversation.enums.ConversationTypeOrigin;
 import org.wtc.application.message.entitity.Message;
 import org.wtc.application.participant.Participant;
 
@@ -73,8 +72,6 @@ public class Conversation {
     @Column(nullable = false)
     private ConversationOrigin origin;
 
-    @Enumerated(EnumType.STRING)
-    private ConversationTypeOrigin conversationTypeOrigin;
 
 
     public void updateLastMessage() {
@@ -90,7 +87,7 @@ public class Conversation {
         conversation.setParticipants(new HashSet<>(ctx.participants()));
         conversation.setStatus(ctx.status());
         conversation.setOrigin(ctx.origin());
-        conversation.setConversationTypeOrigin(ctx.typeOrigin());
+
 
         conversation.setActive(true);
         conversation.setDeleted(false);
@@ -100,4 +97,10 @@ public class Conversation {
 
         return conversation;
     }
+
+    public void addParticipant(Participant participant) {
+        this.participants.add(participant);
+    }
+
+
 }

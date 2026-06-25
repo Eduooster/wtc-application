@@ -6,10 +6,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.wtc.application.auth.entity.AuthenticableUser;
+import org.wtc.application.conversation.entity.Conversation;
 import org.wtc.application.message.enums.ParticipantType;
 import org.wtc.application.user.entity.User;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity(name = "wtc_participants")
 @Getter
@@ -24,22 +27,24 @@ public class Participant {
 
     @Enumerated(EnumType.STRING)
     private ParticipantType participantType;
-    private Long refId;
+
+    @ManyToMany(mappedBy = "participants")
+    private Set<Conversation> conversations = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Participant)) return false;
         Participant that = (Participant) o;
-
-        return Objects.equals(this.refId, that.refId) &&
-                this.participantType == that.participantType;
+        return id != null && id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(refId, participantType);
+        return 31;
     }
+
+
 
 
 }

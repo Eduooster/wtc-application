@@ -1,4 +1,4 @@
-package org.wtc.application.conversation.service;
+package org.wtc.application.conversation.service.useCases;
 
 
 import lombok.RequiredArgsConstructor;
@@ -8,8 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.wtc.application.auth.entity.AuthenticableUser;
 import org.springframework.transaction.annotation.Transactional;
-import org.wtc.application.client.entity.Client;
-import org.wtc.application.client.repository.ClientRepository;
 import org.wtc.application.conversation.dto.ConversationResponseDto;
 import org.wtc.application.conversation.entity.Conversation;
 import org.wtc.application.conversation.mapper.ConversationMapper;

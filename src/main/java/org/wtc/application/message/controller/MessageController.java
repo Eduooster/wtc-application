@@ -20,11 +20,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/messages")
@@ -32,23 +27,11 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Mensagens", description = "Endpoints para envio, leitura e exclusão de mensagens dentro dos canais de conversa.")
 public class MessageController {
 
-    private final SendMessageService sendMessageService;
+
     private final DeleteMessageService deleteMessage;
     private final MarkMessageAsReadService markMessageAsReadService;
 
-    @PreAuthorize("hasAnyRole('OPERATOR','ADMIN','CLIENT')")
-    @PostMapping
-    @Operation(summary = "Enviar uma nova mensagem", description = "Envia uma mensagem de texto ou mídia para dentro de uma conversa ativa.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Mensagem enviada e registrada com sucesso.",
-                    content = @Content(schema = @Schema(implementation = MessageResponseDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Dados da requisição incorretos ou conversa inválida.", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Usuário não autenticado.", content = @Content)
-    })
-    public ResponseEntity<MessageResponseDTO> sendMessage(@RequestBody SendMessageRequestDTO requestDTO, @AuthenticationPrincipal @Parameter(hidden = true) AuthenticableUser authenticableUser) {
-        MessageResponseDTO response = sendMessageService.sendMessage(requestDTO,authenticableUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+
     @PreAuthorize("hasAnyRole('OPERATOR','ADMIN','CLIENT')")
     @PatchMapping("/{id}/read")
     @Operation(summary = "Marcar mensagem como lida", description = "Atualiza o status de leitura de uma mensagem específica para o usuário conectado.")

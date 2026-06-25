@@ -1,9 +1,7 @@
-package org.wtc.application.conversation.service;
+package org.wtc.application.conversation.service.validation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.wtc.application.conversation.entity.Conversation;
-import org.wtc.application.participant.Participant;
 
 @Service
 @RequiredArgsConstructor

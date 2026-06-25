@@ -12,9 +12,5 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     Page<Message> findByConversation(Conversation conversation, Pageable pageable);
 
-    Page<Message> findBySenderOrReceiver(
-            Participant sender,
-            Participant receiver,
-            Pageable pageable
-    );
+
 }

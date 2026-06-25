@@ -1,4 +1,4 @@
-package org.wtc.application.conversation.service;
+package org.wtc.application.conversation.service.useCases;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,9 +12,7 @@ import org.wtc.application.client.repository.ClientRepository;
 import org.wtc.application.conversation.dto.ConversationResponseDto;
 import org.wtc.application.conversation.mapper.ConversationMapper;
 import org.wtc.application.conversation.repository.ConversationRepository;
-import org.wtc.application.participant.Participant;
 import org.wtc.application.participant.ParticipantRepository;
-import org.wtc.application.participant.ParticipantService;
 import org.wtc.application.user.repository.UserRepository;
 
 @Service
@@ -26,16 +24,18 @@ public class FindClientConversationsService {
     private final ClientRepository clientRepository;
     private final UserRepository userRepository;
     private final ParticipantRepository participantRepository;
-    private final ParticipantService participantService;
+
 
     @Transactional(readOnly = true)
     public Page<ConversationResponseDto> findAll(Pageable pageable, AuthenticableUser principal) {
 
-        Participant participant = participantService.resolve(principal);
+
+
+
 
 
         return conversationRepository
-                .findByParticipantsContains(participant, pageable)
+                .findByParticipantsContains(principal.getParticipant(), pageable)
                 .map(conversationMapper::toResponseDto);
     }
 }

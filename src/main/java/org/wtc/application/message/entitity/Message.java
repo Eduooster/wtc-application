@@ -37,8 +37,6 @@ public class Message {
     @ManyToOne
     private Participant sender;
 
-    @ManyToOne
-    private Participant receiver;
 
     @CreationTimestamp
     @Column(nullable = false)
@@ -72,7 +70,7 @@ public class Message {
             Conversation conversation,
             String content,
             Participant sender,
-            Participant receiver,
+
             MessageType chat) {
         Message msg = new Message();
 
@@ -80,7 +78,7 @@ public class Message {
         msg.setContent(content);
 
         msg.setSender(sender);
-        msg.setReceiver(receiver);
+
 
         msg.setStatus(MessageStatus.SENT);
         msg.setRead(false);
@@ -115,7 +113,7 @@ public class Message {
         message.setContent(content);
 
         message.setSender(clientParticipant);
-        message.setReceiver(operatorParticipant);
+
 
         message.setStatus(MessageStatus.SENT);
         message.setRead(false);

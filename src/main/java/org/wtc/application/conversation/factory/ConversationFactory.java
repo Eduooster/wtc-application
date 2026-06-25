@@ -23,7 +23,7 @@ public class ConversationFactory {
         conversation.setParticipants(new HashSet<>(ctx.participants()));
         conversation.setStatus(ctx.status());
         conversation.setOrigin(ctx.origin());
-        conversation.setConversationTypeOrigin(ctx.typeOrigin());
+
 
         conversation.setActive(true);
         conversation.setDeleted(false);

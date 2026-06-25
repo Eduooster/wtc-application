@@ -1,4 +1,4 @@
-package org.wtc.application.conversation.service;
+package org.wtc.application.conversation.service.resolver;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -6,12 +6,10 @@ import org.wtc.application.conversation.dto.ConversationCreationContext;
 import org.wtc.application.conversation.entity.Conversation;
 import org.wtc.application.conversation.enums.ConversationOrigin;
 import org.wtc.application.conversation.enums.ConversationStatus;
-import org.wtc.application.conversation.enums.ConversationTypeOrigin;
 import org.wtc.application.conversation.factory.ConversationFactory;
 import org.wtc.application.conversation.repository.ConversationRepository;
 import org.wtc.application.participant.Participant;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Service
@@ -25,7 +23,7 @@ public class ConversationResolverService {
             Set<Participant> participants,
             ConversationOrigin origin,
             ConversationStatus statusForCreation,
-            ConversationTypeOrigin typeOrigin,
+
             String title,
             Participant assignedOperator
     ) {
@@ -39,7 +37,6 @@ public class ConversationResolverService {
                             new ConversationCreationContext(
                                     participants,
                                     origin,
-                                    typeOrigin,
                                     statusForCreation,
                                     title,
                                     assignedOperator
